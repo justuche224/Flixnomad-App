@@ -1,37 +1,37 @@
-import { TouchableWithoutFeedback, Dimemsions, Image } from "react-native";
+import { TouchableWithoutFeedback, Dimensions, Image } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import Carousel from "react-native-snap-carousel";
+import Carousel from "react-native-reanimated-carousel";
+
+const { width, height } = Dimensions.get("window");
 
 const TrendingMovies = ({ data }) => {
-    const { width, height } = Dimemsions.get("window");
-
-    return (
-        <ThemedView className="mb-0">
-            <ThemedText className="text-lg mb-5 mx-4">Trending</ThemedText>
-            <Carousel
-                data={data}
-                renderItem={({ item }) => <MovieCard item={item} />}
-                firstItem={1}
-                inactiveOpacity={0.6}
-                slider={600}
-                itemWidth={400}
-                slideStyle={{ display: "flex", alignItems: "center" }}
-            />
-        </ThemedView>
-    );
+  return (
+    <ThemedView className="mb-0">
+      <ThemedText className="text-lg mb-5 mx-4">Trending</ThemedText>
+      <Carousel
+        loop
+        width={width * 0.6}
+        height={height * 0.4}
+        autoPlay={true}
+        data={data}
+        scrollAnimationDuration={1000}
+        renderItem={({ item }) => <MovieCard item={item} />}
+        onSnapToItem={(index) => console.log("current index:", index)}
+      />
+    </ThemedView>
+  );
 };
 
 export default TrendingMovies;
 
 const MovieCard = ({ item }) => {
-    return (
-        <TouchableWithoutFeedback>
-            <Image
-                source={require("../assets/images/react-logo.png")}
-                style={{ width: width * 0.6, height: height * 0.4 }}
-                className="rounded-3xl"
-            />
-        </TouchableWithoutFeedback>
-    );
+  return (
+    <TouchableWithoutFeedback>
+      <Image
+        source={require("../assets/images/react-logo.png")}
+        style={{ width: width * 0.6, height: height * 0.4, borderRadius: 24 }}
+      />
+    </TouchableWithoutFeedback>
+  );
 };
