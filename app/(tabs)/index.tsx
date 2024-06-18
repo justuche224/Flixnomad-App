@@ -8,10 +8,14 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { StatusBar } from "expo-status-bar";
 import TrendingMovies from "@/components/TrendingMovies";
+import MovieList from "@/components/MovieList";
+import { newMovies, trendingMovies } from "@/store";
 
 export default function HomeScreen() {
   const ios = Platform.OS == "ios";
-  const [trending, setTrending] = useState([1, 2, 3]);
+  const [trending, setTrending] = useState(trendingMovies);
+  const [latest, setLatest] = useState(newMovies);
+
   return (
     <ThemedView className="flex-1">
       <SafeAreaView
@@ -39,6 +43,12 @@ export default function HomeScreen() {
       >
         {/*Trending*/}
         <TrendingMovies data={trending} />
+
+        {/* Upcomming */}
+        <MovieList title="Latest" data={latest} />
+
+        {/* Dummy */}
+        <MovieList title="Top movies" data={latest} />
       </ScrollView>
     </ThemedView>
   );

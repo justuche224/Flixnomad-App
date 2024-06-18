@@ -1,23 +1,45 @@
 import { TouchableWithoutFeedback, Dimensions, Image } from "react-native";
-import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import Carousel from "react-native-reanimated-carousel";
+import { router } from "expo-router";
+import { Item } from "@/types";
 
 const { width, height } = Dimensions.get("window");
 
-const TrendingMovies = ({ data }) => {
+interface TrendingProps {
+  data: Item[];
+}
+interface MovieCardProps {
+  item: Item;
+  handleClick: () => void;
+}
+
+const TrendingMovies = ({ data }: TrendingProps) => {
+  const handleClick: (item: Item) => void = (item: Item) => {
+    router.push({
+      pathname: "/movie/[id]",
+      params: { id: item._id, movie: JSON.stringify(item) },
+    });
+  };
+
   return (
     <ThemedView className="mb-0">
-      <ThemedText className="text-lg mb-5 mx-4">Trending</ThemedText>
       <Carousel
         loop
-        width={width * 0.6}
+        width={width}
         height={height * 0.4}
         autoPlay={true}
+        autoPlayInterval={5000}
         data={data}
         scrollAnimationDuration={1000}
-        renderItem={({ item }) => <MovieCard item={item} />}
-        onSnapToItem={(index) => console.log("current index:", index)}
+        renderItem={({ item }) => (
+          <MovieCard item={item} handleClick={() => handleClick(item)} />
+        )}
+        mode="parallax"
+        modeConfig={{
+          parallaxScrollingScale: 0.9,
+          parallaxScrollingOffset: 50,
+        }}
       />
     </ThemedView>
   );
@@ -25,12 +47,12 @@ const TrendingMovies = ({ data }) => {
 
 export default TrendingMovies;
 
-const MovieCard = ({ item }) => {
+const MovieCard = ({ item, handleClick }: MovieCardProps) => {
   return (
-    <TouchableWithoutFeedback>
+    <TouchableWithoutFeedback onPress={handleClick}>
       <Image
-        source={require("../assets/images/react-logo.png")}
-        style={{ width: width * 0.6, height: height * 0.4, borderRadius: 24 }}
+        source={{ uri: item.image }}
+        style={{ width: width, height: height * 0.4, borderRadius: 24 }}
       />
     </TouchableWithoutFeedback>
   );
