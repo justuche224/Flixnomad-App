@@ -1,4 +1,9 @@
-import { TouchableWithoutFeedback, Dimensions, Image } from "react-native";
+import {
+  TouchableWithoutFeedback,
+  Dimensions,
+  Image,
+  View,
+} from "react-native";
 import { ThemedView } from "@/components/ThemedView";
 import Carousel from "react-native-reanimated-carousel";
 import { router } from "expo-router";
@@ -23,7 +28,7 @@ const TrendingMovies = ({ data }: TrendingProps) => {
   };
 
   return (
-    <ThemedView className="mb-0">
+    <View>
       <Carousel
         loop
         width={width}
@@ -41,7 +46,7 @@ const TrendingMovies = ({ data }: TrendingProps) => {
           parallaxScrollingOffset: 50,
         }}
       />
-    </ThemedView>
+    </View>
   );
 };
 

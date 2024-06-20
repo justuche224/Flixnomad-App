@@ -6,11 +6,10 @@ import {
   TouchableWithoutFeedback,
   Image,
   Dimensions,
+  View,
 } from "react-native";
-import { ThemedView } from "@/components/ThemedView";
-import { ThemedText } from "./ThemedText";
 import { router } from "expo-router";
-import { Item, NewMovie } from "@/types";
+import { Item } from "@/types";
 
 const { width, height } = Dimensions.get("window");
 
@@ -28,15 +27,13 @@ const handleClick: (item: Item) => void = (item: Item) => {
 
 export default function MovieList({ title, data }: MovieListProps) {
   return (
-    <ThemedView className="mb-8 space-y-4">
-      <ThemedView className="mx-4 flex-row justify-between items-center">
-        <ThemedText type="title" className="text-2xl">
-          {title}
-        </ThemedText>
+    <View className="mb-8 space-y-4">
+      <View className="mx-4 flex-row justify-between items-center">
+        <Text className="text-2xl text-white">{title}</Text>
         <TouchableOpacity>
           <Text style={styles.seeMore}>See More</Text>
         </TouchableOpacity>
-      </ThemedView>
+      </View>
       {/* Movie row */}
       <ScrollView
         horizontal
@@ -50,7 +47,7 @@ export default function MovieList({ title, data }: MovieListProps) {
               key={index}
               onPress={() => handleClick(item)}
             >
-              <ThemedView className="space-y-1 mr-4">
+              <View className="space-y-1 mr-4">
                 <Image
                   source={{ uri: item.image }}
                   style={{
@@ -59,17 +56,17 @@ export default function MovieList({ title, data }: MovieListProps) {
                     height: height * 0.22,
                   }}
                 />
-                <ThemedText className="ml-1">
+                <Text className="ml-1 text-white">
                   {movieName.length > 12
                     ? movieName.slice(0, 12) + "..."
                     : movieName}
-                </ThemedText>
-              </ThemedView>
+                </Text>
+              </View>
             </TouchableWithoutFeedback>
           );
         })}
       </ScrollView>
-    </ThemedView>
+    </View>
   );
 }
 

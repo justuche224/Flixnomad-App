@@ -6,17 +6,20 @@ import {
   Dimensions,
   Platform,
   Image,
+  StyleSheet,
+  Alert,
+  Button,
 } from "react-native";
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { Item } from "@/types";
-import { ThemedView } from "@/components/ThemedView";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
-import { ThemedText } from "@/components/ThemedText";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
-import { StatusBar } from "expo-status-bar";
+import YoutubePlayer from "react-native-youtube-iframe";
+import LoadingScreen from "@/components/LoadingScreen";
+const [loading, setLoading] = useState(false);
 
 const { width, height } = Dimensions.get("window");
 
@@ -49,7 +52,7 @@ export default function MoviePage() {
       style={{ flex: 1 }}
     >
       {/* back button and movie poster */}
-      <ThemedView className="w-full">
+      <View style={{ flex: 1, backgroundColor: "black" }}>
         <SafeAreaView
           style={{
             position: "absolute",
@@ -69,56 +72,110 @@ export default function MoviePage() {
               padding: 1,
             }}
           >
-            <ThemedText>
-              <AntDesign name="arrowleft" size={28} />
-            </ThemedText>
+            <AntDesign color={"white"} name="arrowleft" size={28} />
           </TouchableOpacity>
           <TouchableOpacity>
-            <ThemedText>
-              <AntDesign name="heart" size={24} />
-            </ThemedText>
+            <AntDesign color={"white"} name="heart" size={24} />
           </TouchableOpacity>
         </SafeAreaView>
-        <View>
-          <Image
-            source={{ uri: movieObject.image }}
-            style={{ width, height: height * 0.55 }}
-          />
-          <LinearGradient
-            colors={["transparent", "rgba(0, 0, 0, 0.8)", "rgba(0, 0, 0, 1)"]}
-            style={{
-              width,
-              height: height * 0.4,
-              position: "absolute",
-              bottom: 0,
-            }}
-            start={{ x: 0.5, y: 0 }}
-            end={{ x: 0.5, y: 1 }}
-          />
-        </View>
-      </ThemedView>
+        {loading ? (
+          <LoadingScreen />
+        ) : (
+          <View>
+            <Image
+              source={{ uri: movieObject.image }}
+              style={{ width, height: height * 0.55 }}
+            />
+            <LinearGradient
+              colors={["transparent", "rgba(0, 0, 0, 0.8)", "rgba(0, 0, 0, 1)"]}
+              style={{
+                width,
+                height: height * 0.4,
+                position: "absolute",
+                bottom: 0,
+              }}
+              start={{ x: 0.5, y: 0 }}
+              end={{ x: 0.5, y: 1 }}
+            />
+          </View>
+        )}
+      </View>
       {/* Movie details */}
       <View style={{ marginTop: -(height * 0.09), gap: 4 }}>
         {/* Movie title */}
-        <ThemedText className="text-white text-center text-3xl font-bold tracking-wider">
-          {movieObject.name}
-        </ThemedText>
+        <Text style={styles.title}>{movieObject.name}</Text>
 
         {/* Status, release date, runtime */}
-        <ThemedText className="font-semibold text-base text-center">
-          {movieObject.runtime}
-        </ThemedText>
+        <Text style={styles.text}>{movieObject.runtime}</Text>
 
         {/* genres */}
-        <ThemedText className="font-semibold text-base text-center">
+        <Text style={styles.text}>
           {`${movieObject.genre.genre1}  ${movieObject.genre.genre2}  ${movieObject.genre.genre3}`}
-        </ThemedText>
+        </Text>
+
+        {/* Download button */}
+        <TouchableOpacity style={styles.downloadButton}>
+          <AntDesign name="download" size={24} color="white" />
+          <Text
+            style={{
+              color: "white",
+              fontWeight: "bold",
+              fontSize: 16,
+              textAlign: "center",
+            }}
+          >
+            Download
+          </Text>
+        </TouchableOpacity>
 
         {/* description */}
-        <ThemedText className="font-semibold tracking-wide mx-4 text-sm">
+        <Text
+          style={{
+            color: "white",
+            fontSize: 14,
+            textAlign: "center",
+          }}
+        >
           {movieObject.details}
-        </ThemedText>
+        </Text>
+
+        {/* Trailer */}
+        <Text className="font-semibold tracking-wide mx-4 text-center my-4">
+          Trailer
+        </Text>
+        <View>
+          <YoutubePlayer height={300} width={width} videoId={"iee2TATGMyI"} />
+        </View>
       </View>
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  downloadButton: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 25,
+    borderCurve: "continuous",
+    backgroundColor: "red",
+    marginHorizontal: 20,
+    paddingVertical: 10,
+    marginVertical: 10,
+  },
+  title: {
+    color: "white",
+    fontSize: 24,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginVertical: 5,
+  },
+  text: {
+    color: "white",
+    fontWeight: "semibold",
+    fontSize: 12,
+    textAlign: "center",
+  },
+});
