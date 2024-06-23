@@ -101,7 +101,7 @@ export default function MoviePage() {
         )}
       </View>
       {/* Movie details */}
-      <View style={{ marginTop: -(height * 0.09), gap: 4 }}>
+      <View style={{ marginTop: -(height * 0.09), gap: 4,backgroundColor: "black", color: "white" }}>
         {/* Movie title */}
         <Text style={styles.title}>{movieObject.name}</Text>
 
