@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Image,
   TouchableOpacity,
@@ -6,23 +6,48 @@ import {
   ScrollView,
   View,
   Text,
+  Dimensions,
 } from "react-native";
-import { FontAwesome6 } from "@expo/vector-icons";
+import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import TrendingMovies from "@/components/TrendingMovies";
 import MovieList from "@/components/MovieList";
-import { newMovies, trendingMovies } from "@/store";
+import { fetchTrendingMovies, newMovies, trendingMovies } from "@/store";
 import { router } from "expo-router";
 import LoadingScreen from "@/components/LoadingScreen";
+import { ApiMovie } from "@/types"; // Import your type definition here
 
 export default function HomeScreen() {
+  const { width, height } = Dimensions.get("window");
+
   const ios = Platform.OS == "ios";
-  const [trending, setTrending] = useState(trendingMovies);
+  const [trending, setTrending] = useState<ApiMovie[]>([]);
   const [latest, setLatest] = useState(newMovies);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | undefined>();
+
+  useEffect(() => {
+    getTrendingMovies();
+  }, []);
+
+  const getTrendingMovies = async () => {
+    setLoading(true);
+    const response = await fetchTrendingMovies();
+    if (response.data) {
+      setTrending(response.data.movies);
+    } else {
+      console.error("Error fetching trending movies:", response.error);
+      setError(response.error);
+    }
+    setLoading(false);
+  };
+
+  const handleRefresh = () => {
+    getTrendingMovies();
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: "black" }}>
@@ -55,14 +80,45 @@ export default function HomeScreen() {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 10 }}
         >
-          {/*Trending*/}
-          <TrendingMovies data={trending} />
+          {error ? (
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: "black",
+                justifyContent: "center",
+                alignItems: "center",
+                marginVertical: 20,
+                height: height / 1.5,
+                width: width,
+              }}
+            >
+              <Text
+                style={{
+                  color: "white",
+                  fontFamily: "HonkRegular",
+                  fontSize: 40,
+                  textAlign: "center",
+                  marginHorizontal: 16,
+                }}
+              >
+                {error}
+              </Text>
+              <TouchableOpacity onPress={handleRefresh}>
+                <FontAwesome name="refresh" size={44} color="white" />
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <>
+              {/*Trending*/}
+              <TrendingMovies data={trending} />
 
-          {/* Upcomming */}
-          <MovieList title="Latest" data={latest} />
+              {/* Upcoming */}
+              <MovieList title="Latest" data={latest} />
 
-          {/* Dummy */}
-          <MovieList title="Top movies" data={latest} />
+              {/* Dummy */}
+              <MovieList title="Top movies" data={latest} />
+            </>
+          )}
         </ScrollView>
       )}
     </View>

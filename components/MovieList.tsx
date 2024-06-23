@@ -27,7 +27,7 @@ const handleClick: (item: Item) => void = (item: Item) => {
 
 export default function MovieList({ title, data }: MovieListProps) {
   return (
-    <View className="mb-8 space-y-4">
+    <View className="mb-8 space-y-4 bg-black">
       <View className="mx-4 flex-row justify-between items-center">
         <Text className="text-2xl text-white">{title}</Text>
         <TouchableOpacity>
@@ -38,7 +38,10 @@ export default function MovieList({ title, data }: MovieListProps) {
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 15 }}
+        contentContainerStyle={{
+          paddingHorizontal: 15,
+          backgroundColor: "black",
+        }}
       >
         {data.map((item, index) => {
           let movieName = item.name;

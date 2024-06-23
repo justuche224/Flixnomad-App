@@ -7,10 +7,8 @@ import {
   Platform,
   Image,
   StyleSheet,
-  Alert,
-  Button,
 } from "react-native";
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { Item } from "@/types";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -19,11 +17,14 @@ import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import YoutubePlayer from "react-native-youtube-iframe";
 import LoadingScreen from "@/components/LoadingScreen";
-const [loading, setLoading] = useState(false);
+import MovieList from "@/components/MovieList";
+import { newMovies } from "@/store";
 
 const { width, height } = Dimensions.get("window");
 
 export default function MoviePage() {
+  const [loading, setLoading] = useState(false);
+  const [latest, setLatest] = useState(newMovies);
   const { movieId, movie } = useLocalSearchParams();
   const navigation = useNavigation();
   let movieObject: Item | undefined;
@@ -101,7 +102,13 @@ export default function MoviePage() {
         )}
       </View>
       {/* Movie details */}
-      <View style={{ marginTop: -(height * 0.09), gap: 4,backgroundColor: "black", color: "white" }}>
+      <View
+        style={{
+          marginTop: -(height * 0.09),
+          gap: 4,
+          backgroundColor: "black",
+        }}
+      >
         {/* Movie title */}
         <Text style={styles.title}>{movieObject.name}</Text>
 
@@ -111,6 +118,18 @@ export default function MoviePage() {
         {/* genres */}
         <Text style={styles.text}>
           {`${movieObject.genre.genre1}  ${movieObject.genre.genre2}  ${movieObject.genre.genre3}`}
+        </Text>
+
+        {/* description */}
+        <Text
+          style={{
+            color: "white",
+            fontSize: 14,
+            textAlign: "left",
+            fontStyle: "italic",
+          }}
+        >
+          {movieObject.details}
         </Text>
 
         {/* Download button */}
@@ -128,24 +147,21 @@ export default function MoviePage() {
           </Text>
         </TouchableOpacity>
 
-        {/* description */}
-        <Text
-          style={{
-            color: "white",
-            fontSize: 14,
-            textAlign: "center",
-          }}
-        >
-          {movieObject.details}
-        </Text>
-
         {/* Trailer */}
-        <Text className="font-semibold tracking-wide mx-4 text-center my-4">
+        <Text className="font-semibold tracking-wide mx-4 text-left text-white my-4 text-3xl">
           Trailer
         </Text>
-        <View>
-          <YoutubePlayer height={300} width={width} videoId={"iee2TATGMyI"} />
+        <View className=" justify-center items-center">
+          <YoutubePlayer
+            height={300}
+            width={width - 50}
+            videoId={"LFSpRNtxd8I"}
+          />
         </View>
+      </View>
+      <View className="bg-black">
+        {/* Dummy */}
+        <MovieList title="Related" data={latest} />
       </View>
     </ScrollView>
   );
@@ -169,13 +185,15 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 24,
     fontWeight: "bold",
-    textAlign: "center",
+    textAlign: "left",
     marginVertical: 5,
+    paddingLeft: 5,
   },
   text: {
     color: "white",
     fontWeight: "semibold",
     fontSize: 12,
-    textAlign: "center",
+    textAlign: "left",
+    paddingLeft: 5,
   },
 });

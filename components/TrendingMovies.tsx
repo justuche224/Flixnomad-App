@@ -4,23 +4,22 @@ import {
   Image,
   View,
 } from "react-native";
-import { ThemedView } from "@/components/ThemedView";
 import Carousel from "react-native-reanimated-carousel";
 import { router } from "expo-router";
-import { Item } from "@/types";
+import { ApiMovie, Item } from "@/types";
 
 const { width, height } = Dimensions.get("window");
 
 interface TrendingProps {
-  data: Item[];
+  data: ApiMovie[];
 }
 interface MovieCardProps {
-  item: Item;
+  item: ApiMovie;
   handleClick: () => void;
 }
 
 const TrendingMovies = ({ data }: TrendingProps) => {
-  const handleClick: (item: Item) => void = (item: Item) => {
+  const handleClick: (item: ApiMovie) => void = (item: ApiMovie) => {
     router.push({
       pathname: "/movie/[id]",
       params: { id: item._id, movie: JSON.stringify(item) },
@@ -32,7 +31,7 @@ const TrendingMovies = ({ data }: TrendingProps) => {
       <Carousel
         loop
         width={width}
-        height={height * 0.4}
+        height={height * 0.6}
         autoPlay={true}
         autoPlayInterval={5000}
         data={data}
@@ -42,7 +41,7 @@ const TrendingMovies = ({ data }: TrendingProps) => {
         )}
         mode="parallax"
         modeConfig={{
-          parallaxScrollingScale: 0.9,
+          parallaxScrollingScale: 1,
           parallaxScrollingOffset: 50,
         }}
       />
@@ -57,7 +56,7 @@ const MovieCard = ({ item, handleClick }: MovieCardProps) => {
     <TouchableWithoutFeedback onPress={handleClick}>
       <Image
         source={{ uri: item.image }}
-        style={{ width: width, height: height * 0.4, borderRadius: 24 }}
+        style={{ width: width, height: height * 0.6 }}
       />
     </TouchableWithoutFeedback>
   );

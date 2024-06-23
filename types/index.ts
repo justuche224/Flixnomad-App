@@ -39,3 +39,39 @@ interface Data {
 }
 
 export type { Item, Data, NewMovie };
+
+export type ApiMovie = {
+  __v: number;
+  _id: string;
+  createdAt: string;
+  details: string;
+  director: string;
+  downloadLink: string[]; // Assuming it's an array of strings, adjust if needed
+  genre: string[]; // Assuming it's an array of strings, adjust if needed
+  image: string;
+  name: string;
+  quality: string;
+  rated: string;
+  releaseDate: string;
+  runtime: string;
+  trailer: string;
+  type: string;
+  year: number;
+};
+
+type Pagination = {
+  page: number;
+  perPage: number;
+  total: number;
+  totalPages: number;
+};
+
+export type MoviesApiResponse = {
+  movies: ApiMovie[];
+  pagination: Pagination;
+};
+
+export type ApiResponse<T> = {
+  data?: T;
+  error?: string;
+};

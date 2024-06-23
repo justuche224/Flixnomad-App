@@ -1,4 +1,41 @@
-import { Data, Item, NewMovie } from "@/types";
+import axios from "axios";
+import { ApiResponse, Data, Item, MoviesApiResponse, NewMovie } from "@/types";
+
+//endpoints
+const apiBaseUrl = "https://flixnomad-app-backend-express.onrender.com/api";
+const trendingMoviesEndpoint = `${apiBaseUrl}/movies`;
+
+// Generic API call function
+const apiCall = async <T>(
+  endpoint: string,
+  params?: object
+): Promise<ApiResponse<T>> => {
+  const options = {
+    method: "GET",
+    url: endpoint,
+    params: params ? params : {},
+  };
+
+  try {
+    const response = await axios.request<T>(options);
+    return { data: response.data };
+  } catch (error) {
+    console.error(error, `fetching ${endpoint}`);
+    return { error: "Unable to fetch data!" };
+  }
+};
+
+export const fetchTrendingMovies = () => {
+  return apiCall<MoviesApiResponse>(trendingMoviesEndpoint);
+};
+
+export const fetchnewMovies = () => {
+  return apiCall(trendingMoviesEndpoint);
+};
+
+export const fetchMovies = () => {
+  return apiCall(trendingMoviesEndpoint);
+};
 
 export const trendingMovies: Item[] = [
   {
