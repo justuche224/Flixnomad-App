@@ -63,7 +63,6 @@ export default function HomeScreen() {
             marginHorizontal: 16,
           }}
         >
-          <FontAwesome6 color="white" name="bars-staggered" size={24} />
           <Text className="text-2xl font-bold text-white">
             <Fontisto name="film" size={21} color="red" />
             Flixnomad
