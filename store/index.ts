@@ -1,8 +1,8 @@
 import axios from "axios";
-import { ApiResponse, Data, Item, MoviesApiResponse, NewMovie } from "@/types";
+import { ApiMovie, ApiResponse, Data, Item, MoviesApiResponse } from "@/types";
 
 //endpoints
-const apiBaseUrl = "https://flixnomad-app-backend-express.onrender.com/api";
+const apiBaseUrl = "https://flixnomad-app-backend.vercel.app/api";
 const trendingMoviesEndpoint = `${apiBaseUrl}/movies`;
 
 // Generic API call function
@@ -35,6 +35,10 @@ export const fetchnewMovies = () => {
 
 export const fetchMovies = () => {
   return apiCall(trendingMoviesEndpoint);
+};
+
+export const fetSingleMovie = (movieId: string) => {
+  return apiCall<ApiMovie>(`${apiBaseUrl}/movie/${movieId}`);
 };
 
 export const trendingMovies: Item[] = [

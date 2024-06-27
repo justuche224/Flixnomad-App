@@ -46,7 +46,7 @@ export type ApiMovie = {
   createdAt: string;
   details: string;
   director: string;
-  downloadLink: string[]; // Assuming it's an array of strings, adjust if needed
+  downloadLink: DownloadLink[]; // Assuming it's an array of strings, adjust if needed
   genre: string[]; // Assuming it's an array of strings, adjust if needed
   image: string;
   name: string;

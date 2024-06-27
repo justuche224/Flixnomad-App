@@ -10,7 +10,7 @@ const LoadingScreen = () => {
       style={{ height: height, width: width }}
       className="absolute flex-row items-center justify-center"
     >
-      <Progress.CircleSnail thickness={7} color="red" size={100} />
+      <Progress.CircleSnail thickness={5} color="red" size={70} />
     </View>
   );
 };
