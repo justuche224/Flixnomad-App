@@ -6,7 +6,8 @@ import {
     Dimensions,
     Platform,
     Image,
-    StyleSheet
+    StyleSheet,
+    Linking
 } from "react-native";
 import React, { useState } from "react";
 import { useLocalSearchParams } from "expo-router";
@@ -47,6 +48,29 @@ export default function MoviePage() {
             </View>
         );
     }
+
+    const handleDownloadPress = () => {
+        if (
+            movieObject &&
+            movieObject.downloadLink &&
+            movieObject.downloadLink[0]
+        ) {
+            Linking.openURL(movieObject.downloadLink[0].link);
+        } else {
+            alert("No download link available");
+        }
+    };
+    const handlePlayPress = () => {
+        if (
+            movieObject &&
+            movieObject.downloadLink &&
+            movieObject.downloadLink[0]
+        ) {
+            Linking.openURL(movieObject.downloadLink[0].link);
+        } else {
+            alert("No download link available");
+        }
+    };
 
     return (
         <ScrollView
@@ -146,20 +170,41 @@ export default function MoviePage() {
                         />
                     </View>
                 </Collapsible>
-                {/* Download button */}
-                <TouchableOpacity style={styles.downloadButton}>
-                    <AntDesign name="download" size={24} color="white" />
-                    <Text
-                        style={{
-                            color: "white",
-                            fontWeight: "bold",
-                            fontSize: 16,
-                            textAlign: "center"
-                        }}
+                {/* Download and Play button */}
+                <View className="gap-1 justify-center items-center flex-row">
+                    <TouchableOpacity
+                        style={styles.downloadButton}
+                        onPress={handleDownloadPress}
                     >
-                        Download
-                    </Text>
-                </TouchableOpacity>
+                        <AntDesign name="download" size={24} color="white" />
+                        <Text
+                            style={{
+                                color: "white",
+                                fontWeight: "bold",
+                                fontSize: 16,
+                                textAlign: "center"
+                            }}
+                        >
+                            Download
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.downloadButton}
+                        onPress={handlePlayPress}
+                    >
+                        <AntDesign name="playcircleo" size={24} color="white" />
+                        <Text
+                            style={{
+                                color: "white",
+                                fontWeight: "bold",
+                                fontSize: 16,
+                                textAlign: "center"
+                            }}
+                        >
+                            Watch
+                        </Text>
+                    </TouchableOpacity>
+                </View>
             </View>
             <View className="bg-black">
                 {/* Dummy */}
@@ -174,13 +219,15 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection: "row",
         gap: 5,
+        width: width / 2.25,
         alignItems: "center",
         justifyContent: "center",
         borderRadius: 25,
         borderCurve: "continuous",
         backgroundColor: "red",
-        marginHorizontal: 20,
+
         paddingVertical: 10,
+        paddingHorizontal: 20,
         marginVertical: 10
     },
     title: {
