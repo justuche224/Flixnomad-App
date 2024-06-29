@@ -41,6 +41,11 @@ export const fetSingleMovie = (movieId: string) => {
   return apiCall<ApiMovie>(`${apiBaseUrl}/movie/${movieId}`);
 };
 
+export const fetchMoviesWithPagination = (page: number, perPage: number) => {
+  const params = { page, perPage };
+  return apiCall<MoviesApiResponse>(trendingMoviesEndpoint, params);
+};
+
 export const trendingMovies: Item[] = [
   {
     _id: "665419212241bbe57640cd11",
