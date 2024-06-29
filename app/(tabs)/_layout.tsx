@@ -15,7 +15,7 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
         headerShown: false,
         tabBarStyle: { backgroundColor: "black", borderTopColor: "black" },
-        tabBarShowLabel: false,
+        // tabBarShowLabel: false,
       }}
     >
       <Tabs.Screen
@@ -36,7 +36,7 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="downloads"
         options={{
           title: "Downloads",
@@ -44,7 +44,7 @@ export default function TabLayout() {
             <AntDesign name="download" size={28} color={color} />
           ),
         }}
-      />
+      /> */}
       <Tabs.Screen
         name="series"
         options={{
@@ -57,7 +57,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="genres"
         options={{
-          title: "Genres",
+          title: "Categories",
           tabBarIcon: ({ color, focused }) => (
             <AntDesign name="bars" size={28} color={color} />
           ),

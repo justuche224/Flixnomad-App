@@ -26,7 +26,8 @@ const apiCall = async <T>(
 };
 
 export const fetchTrendingMovies = () => {
-  return apiCall<MoviesApiResponse>(trendingMoviesEndpoint);
+  const params = { page: 1, perPage: 3 };
+  return apiCall<MoviesApiResponse>(trendingMoviesEndpoint, params);
 };
 
 export const fetchnewMovies = () => {
@@ -42,7 +43,12 @@ export const fetSingleMovie = (movieId: string) => {
 };
 
 export const fetchMoviesWithPagination = (page: number, perPage: number) => {
-  const params = { page, perPage };
+  const params = { page, perPage, type: "movie" };
+  return apiCall<MoviesApiResponse>(trendingMoviesEndpoint, params);
+};
+
+export const fetchSeriesWithPagination = (page: number, perPage: number) => {
+  const params = { page, perPage, type: "series" };
   return apiCall<MoviesApiResponse>(trendingMoviesEndpoint, params);
 };
 
