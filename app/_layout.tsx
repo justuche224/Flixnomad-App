@@ -8,7 +8,7 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
-
+import * as NavigationBar from "expo-navigation-bar";
 import { useColorScheme } from "@/hooks/useColorScheme";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -22,6 +22,7 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
+    NavigationBar.setBackgroundColorAsync("black");
     if (loaded) {
       SplashScreen.hideAsync();
     }

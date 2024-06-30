@@ -45,7 +45,8 @@
     "react-native-webview": "13.8.6",
     "react-native-youtube-iframe": "^2.3.0",
     "expo-av": "~14.0.5",
-    "expo-screen-orientation": "~7.0.5"
+    "expo-screen-orientation": "~7.0.5",
+    "expo-navigation-bar": "~3.0.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

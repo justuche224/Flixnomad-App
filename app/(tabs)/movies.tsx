@@ -68,6 +68,7 @@ const Movies = () => {
       </View>
     </TouchableWithoutFeedback>
   );
+  // console.table(movies);
 
   return (
     <View style={styles.container}>

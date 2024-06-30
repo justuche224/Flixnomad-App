@@ -31,7 +31,7 @@ const TrendingMovies = ({ data }: TrendingProps) => {
       <Carousel
         loop
         width={width}
-        height={height * 0.6}
+        height={height * 0.4}
         autoPlay={true}
         autoPlayInterval={5000}
         data={data}
@@ -41,7 +41,7 @@ const TrendingMovies = ({ data }: TrendingProps) => {
         )}
         mode="parallax"
         modeConfig={{
-          parallaxScrollingScale: 1,
+          parallaxScrollingScale: 0.9,
           parallaxScrollingOffset: 50,
         }}
       />

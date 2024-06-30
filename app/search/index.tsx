@@ -22,10 +22,15 @@ const apiBaseUrl = "https://flixnomad-app-backend.vercel.app/api";
 const searchEndpoint = `${apiBaseUrl}/search`;
 
 const fetchSearchResults = async (searchTerm: string) => {
+  // console.log(searchTerm);
+
   try {
     const response = await axios.get(searchEndpoint, {
       params: { searchTerm },
     });
+
+    // console.log(response.data);
+
     return response.data.movies;
   } catch (error) {
     console.error("Error fetching search results:", error);

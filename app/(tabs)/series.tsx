@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ApiMovie } from "@/types";
-import { fetchMoviesWithPagination } from "@/store";
+import { fetchSeriesWithPagination } from "@/store";
 import { FontAwesome, FontAwesome5, Fontisto } from "@expo/vector-icons";
 import { router } from "expo-router";
 import LoadingScreen from "@/components/LoadingScreen";
@@ -31,7 +31,7 @@ const Movies = () => {
 
   const loadMovies = async (pageNum: number) => {
     setLoading(true);
-    const response = await fetchMoviesWithPagination(pageNum, perPage);
+    const response = await fetchSeriesWithPagination(pageNum, perPage);
     setLoading(false);
     if (response.data) {
       setMovies((prevMovies) => [...prevMovies, ...response.data.movies]);

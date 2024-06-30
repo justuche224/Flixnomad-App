@@ -16,8 +16,12 @@ const apiCall = async <T>(
     params: params ? params : {},
   };
 
+  console.log(options);
+
   try {
     const response = await axios.request<T>(options);
+    console.log(response.data);
+
     return { data: response.data };
   } catch (error) {
     console.error(error, `fetching ${endpoint}`);
@@ -26,7 +30,7 @@ const apiCall = async <T>(
 };
 
 export const fetchTrendingMovies = () => {
-  const params = { page: 1, perPage: 3 };
+  const params = { page: 1, perPage: 5 };
   return apiCall<MoviesApiResponse>(trendingMoviesEndpoint, params);
 };
 
