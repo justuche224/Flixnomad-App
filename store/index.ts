@@ -55,6 +55,10 @@ export const fetchSeriesWithPagination = (page: number, perPage: number) => {
   return apiCall<MoviesApiResponse>(trendingMoviesEndpoint, params);
 };
 
+export const fetchGenres = () => {
+  return apiCall<{ genres: string[] }>(`${apiBaseUrl}/movies/genres`);
+};
+
 export const trendingMovies: Item[] = [
   {
     _id: "665419212241bbe57640cd11",

@@ -58,7 +58,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="genres"
         options={{
-          title: "Categories",
+          title: "Genres",
           tabBarIcon: ({ color, focused }) => (
             <AntDesign name="bars" size={28} color={color} />
           ),
