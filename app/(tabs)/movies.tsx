@@ -10,6 +10,7 @@ import {
   TouchableWithoutFeedback,
   Image,
   Dimensions,
+  ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ApiMovie } from "@/types";
@@ -23,11 +24,16 @@ const { width, height } = Dimensions.get("window");
 const Movies = () => {
   const ios = Platform.OS === "ios";
   const [movies, setMovies] = useState<ApiMovie[]>([]);
+  const [genre, setGenre] = useState([1, 2, 3, 4, 5, 6, 7, 5, 5, 6, 3, 3]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const perPage = 15;
+
+  useEffect(() => {
+    loadMovies(1);
+  }, []);
 
   const loadMovies = async (pageNum: number) => {
     setLoading(true);
@@ -40,10 +46,6 @@ const Movies = () => {
       setError(response.error);
     }
   };
-
-  useEffect(() => {
-    loadMovies(1);
-  }, []);
 
   const loadMoreMovies = () => {
     if (page < totalPages) {
@@ -85,18 +87,52 @@ const Movies = () => {
       {loading && page === 1 ? (
         <LoadingScreen />
       ) : (
-        <FlatList
-          data={movies}
-          renderItem={renderMovie}
-          keyExtractor={(item) => item._id}
-          onEndReached={loadMoreMovies}
-          onEndReachedThreshold={0.5}
-          numColumns={3}
-          ListFooterComponent={
-            loading ? <ActivityIndicator size="large" color="#fff" /> : null
-          }
-          contentContainerStyle={styles.listContentContainer}
-        />
+        <>
+          <ScrollView
+            horizontal
+            style={{ marginVertical: 10, paddingHorizontal: 10 }}
+          >
+            {genre.map((i) => (
+              <TouchableOpacity
+                key={i}
+                style={{
+                  backgroundColor: "#302f2f",
+                  paddingBottom: 10,
+                  paddingHorizontal: 9,
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: 5,
+                  marginLeft: 10,
+                }}
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    fontSize: 16,
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    lineHeight: 27,
+                  }}
+                >
+                  Genre
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+          <FlatList
+            data={movies}
+            renderItem={renderMovie}
+            keyExtractor={(item) => item._id}
+            onEndReached={loadMoreMovies}
+            onEndReachedThreshold={0.5}
+            numColumns={3}
+            ListFooterComponent={
+              loading ? <ActivityIndicator size="large" color="#fff" /> : null
+            }
+            contentContainerStyle={styles.listContentContainer}
+          />
+        </>
       )}
       {error && (
         <View style={styles.errorContainer}>

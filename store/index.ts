@@ -15,8 +15,7 @@ const apiCall = async <T>(
     url: endpoint,
     params: params ? params : {},
   };
-
-  console.log(options);
+  // console.log(options);
 
   try {
     const response = await axios.request<T>(options);

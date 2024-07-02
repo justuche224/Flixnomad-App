@@ -21,6 +21,7 @@ import LoadingScreen from "@/components/LoadingScreen";
 import MovieList from "@/components/MovieList";
 import { fetSingleMovie, newMovies } from "@/store";
 import { Collapsible } from "@/components/Collapsible";
+import * as WebBrowser from "expo-web-browser";
 
 const { width, height } = Dimensions.get("window");
 
@@ -107,7 +108,8 @@ export default function MoviePage() {
 
   const handleDownloadPress = () => {
     if (movie && movie.downloadLink && movie.downloadLink[0]) {
-      Linking.openURL(movie.downloadLink[0].link);
+      // Linking.openURL(movie.downloadLink[0].link);
+      WebBrowser.openBrowserAsync(movie.downloadLink[0].link);
     } else {
       alert("No download link available");
     }

@@ -1,5 +1,6 @@
 import { Tabs } from "expo-router";
 import React from "react";
+import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 // import TabBar from "@/components/navigation/TabBar";
 import { Colors } from "@/constants/Colors";
@@ -50,7 +51,7 @@ export default function TabLayout() {
         options={{
           title: "Series",
           tabBarIcon: ({ color, focused }) => (
-            <AntDesign name="videocamera" size={28} color={color} />
+            <Ionicons name="tv" size={28} color={color} />
           ),
         }}
       />
