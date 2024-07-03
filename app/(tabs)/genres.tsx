@@ -5,12 +5,12 @@ import {
   View,
   FlatList,
   StyleSheet,
-  SafeAreaView,
   Platform,
   TouchableOpacity,
 } from "react-native";
 import LoadingScreen from "@/components/LoadingScreen";
-import { FontAwesome5, Fontisto } from "@expo/vector-icons";
+import Header from "@/components/Header";
+import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
 
 const GenreList = () => {
@@ -37,24 +37,25 @@ const GenreList = () => {
 
   return (
     <View style={styles.container}>
-      <SafeAreaView style={styles.safeAreaView}>
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>
-            <Fontisto name="film" size={21} color="red" /> Genres
-          </Text>
-          <TouchableOpacity onPress={() => router.push("/search")}>
-            <FontAwesome5 color="white" name="search" size={20} />
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
+      <Header title="Genres" />
+      <StatusBar />
       <FlatList
         data={genres}
         style={{ marginTop: 20 }}
         keyExtractor={(item) => item}
         renderItem={({ item }) => (
-          <View style={styles.genreItem}>
-            <Text style={styles.genreText}>{item}</Text>
-          </View>
+          <TouchableOpacity
+            onPress={() =>
+              router.push({
+                pathname: "/genre/[genre]",
+                params: { genre: item },
+              })
+            }
+          >
+            <View style={styles.genreItem}>
+              <Text style={styles.genreText}>{item}</Text>
+            </View>
+          </TouchableOpacity>
         )}
       />
     </View>
@@ -64,7 +65,6 @@ const GenreList = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
     backgroundColor: "black",
     color: "white",
   },

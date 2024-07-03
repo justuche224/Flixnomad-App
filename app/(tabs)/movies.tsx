@@ -14,17 +14,19 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ApiMovie } from "@/types";
-import { fetchMoviesWithPagination } from "@/store";
+import { fetchGenres, fetchMoviesWithPagination } from "@/store";
 import { FontAwesome, FontAwesome5, Fontisto } from "@expo/vector-icons";
 import { router } from "expo-router";
 import LoadingScreen from "@/components/LoadingScreen";
+import Header from "@/components/Header";
+import { StatusBar } from "expo-status-bar";
 
 const { width, height } = Dimensions.get("window");
 
 const Movies = () => {
   const ios = Platform.OS === "ios";
   const [movies, setMovies] = useState<ApiMovie[]>([]);
-  const [genre, setGenre] = useState([1, 2, 3, 4, 5, 6, 7, 5, 5, 6, 3, 3]);
+  const [genre, setGenre] = useState<string[] | undefined>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
   const [page, setPage] = useState(1);
@@ -32,6 +34,7 @@ const Movies = () => {
   const perPage = 15;
 
   useEffect(() => {
+    getGenres();
     loadMovies(1);
   }, []);
 
@@ -39,12 +42,22 @@ const Movies = () => {
     setLoading(true);
     const response = await fetchMoviesWithPagination(pageNum, perPage);
     setLoading(false);
-    if (response.data) {
+    if (response.data && response.data.movies) {
       setMovies((prevMovies) => [...prevMovies, ...response.data.movies]);
       setTotalPages(response.data.pagination.totalPages);
     } else if (response.error) {
       setError(response.error);
     }
+  };
+
+  const getGenres = async () => {
+    const response = await fetchGenres();
+    if (response.data) {
+      setGenre(response.data.genres);
+    } else {
+      console.error(response.error);
+    }
+    setLoading(false);
   };
 
   const loadMoreMovies = () => {
@@ -58,11 +71,18 @@ const Movies = () => {
   };
 
   const renderMovie = ({ item }: { item: ApiMovie }) => (
-    <TouchableWithoutFeedback onPress={() => {}}>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        router.push({
+          pathname: "/movie/[id]",
+          params: { id: item._id },
+        });
+      }}
+    >
       <View style={styles.movieContainer}>
         <Image source={{ uri: item.image }} style={styles.movieImage} />
         <Text style={styles.movieTitle}>
-          {item.name.length > 16 ? item.name.slice(0, 16) + "..." : item.name}
+          {item.name.length > 13 ? item.name.slice(0, 13) + "..." : item.name}
         </Text>
         <Text style={styles.movieInfo}>
           {item.year} | {item.rated} | {item.runtime}
@@ -74,51 +94,50 @@ const Movies = () => {
 
   return (
     <View style={styles.container}>
-      <SafeAreaView style={styles.safeAreaView}>
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>
-            <Fontisto name="film" size={21} color="red" /> Movies
-          </Text>
-          <TouchableOpacity onPress={() => router.push("/search")}>
-            <FontAwesome5 color="white" name="search" size={20} />
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
+      <Header title="Movies" />
+      <StatusBar />
       {loading && page === 1 ? (
         <LoadingScreen />
       ) : (
         <>
           <ScrollView
             horizontal
-            style={{ marginVertical: 10, paddingHorizontal: 10 }}
+            style={{ marginVertical: 20, paddingHorizontal: 10 }}
           >
-            {genre.map((i) => (
-              <TouchableOpacity
-                key={i}
-                style={{
-                  backgroundColor: "#302f2f",
-                  paddingBottom: 10,
-                  paddingHorizontal: 9,
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  borderRadius: 5,
-                  marginLeft: 10,
-                }}
-              >
-                <Text
+            {genre &&
+              genre.map((genre) => (
+                <TouchableOpacity
+                  onPress={() =>
+                    router.push({
+                      pathname: "/genre/[genre]",
+                      params: { genre: genre },
+                    })
+                  }
+                  key={genre}
                   style={{
-                    color: "white",
-                    fontSize: 16,
-                    fontWeight: "bold",
-                    textAlign: "center",
-                    lineHeight: 27,
+                    backgroundColor: "#302f2f",
+                    paddingBottom: 10,
+                    paddingHorizontal: 9,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRadius: 5,
+                    marginLeft: 10,
                   }}
                 >
-                  Genre
-                </Text>
-              </TouchableOpacity>
-            ))}
+                  <Text
+                    style={{
+                      color: "white",
+                      fontSize: 16,
+                      fontWeight: "bold",
+                      textAlign: "center",
+                      lineHeight: 27,
+                    }}
+                  >
+                    {genre}
+                  </Text>
+                </TouchableOpacity>
+              ))}
           </ScrollView>
           <FlatList
             data={movies}
@@ -137,7 +156,12 @@ const Movies = () => {
       {error && (
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>{error}</Text>
-          <TouchableOpacity onPress={() => loadMovies(1)}>
+          <TouchableOpacity
+            onPress={() => {
+              getGenres();
+              loadMovies(1);
+            }}
+          >
             <FontAwesome name="refresh" size={44} color="white" />
           </TouchableOpacity>
         </View>
@@ -182,13 +206,13 @@ const styles = StyleSheet.create({
     color: "white",
     marginLeft: 5,
     marginTop: 5,
-    fontSize: 14,
+    fontSize: 12,
   },
   movieInfo: {
     color: "white",
     marginLeft: 5,
     marginTop: 5,
-    fontSize: 12,
+    fontSize: 9,
   },
   listContentContainer: {
     paddingBottom: 10,

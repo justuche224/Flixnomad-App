@@ -10,30 +10,39 @@ import {
   TouchableWithoutFeedback,
   Image,
   Dimensions,
+  ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ApiMovie } from "@/types";
-import { fetchSeriesWithPagination } from "@/store";
-import { FontAwesome, FontAwesome5, Fontisto } from "@expo/vector-icons";
+import { fetchGenres, fetchSeriesWithPagination } from "@/store";
+import { FontAwesome } from "@expo/vector-icons";
 import { router } from "expo-router";
 import LoadingScreen from "@/components/LoadingScreen";
+import Header from "@/components/Header";
+import { StatusBar } from "expo-status-bar";
 
 const { width, height } = Dimensions.get("window");
 
 const Movies = () => {
   const ios = Platform.OS === "ios";
   const [movies, setMovies] = useState<ApiMovie[]>([]);
+  const [genre, setGenre] = useState<string[] | undefined>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const perPage = 15;
 
+  useEffect(() => {
+    getGenres();
+    loadMovies(1);
+  }, []);
+
   const loadMovies = async (pageNum: number) => {
     setLoading(true);
     const response = await fetchSeriesWithPagination(pageNum, perPage);
     setLoading(false);
-    if (response.data) {
+    if (response.data && response.data.movies) {
       setMovies((prevMovies) => [...prevMovies, ...response.data.movies]);
       setTotalPages(response.data.pagination.totalPages);
     } else if (response.error) {
@@ -41,9 +50,15 @@ const Movies = () => {
     }
   };
 
-  useEffect(() => {
-    loadMovies(1);
-  }, []);
+  const getGenres = async () => {
+    const response = await fetchGenres();
+    if (response.data) {
+      setGenre(response.data.genres);
+    } else {
+      console.error(response.error);
+    }
+    setLoading(false);
+  };
 
   const loadMoreMovies = () => {
     if (page < totalPages) {
@@ -56,11 +71,18 @@ const Movies = () => {
   };
 
   const renderMovie = ({ item }: { item: ApiMovie }) => (
-    <TouchableWithoutFeedback onPress={() => {}}>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        router.push({
+          pathname: "/movie/[id]",
+          params: { id: item._id },
+        });
+      }}
+    >
       <View style={styles.movieContainer}>
         <Image source={{ uri: item.image }} style={styles.movieImage} />
         <Text style={styles.movieTitle}>
-          {item.name.length > 16 ? item.name.slice(0, 16) + "..." : item.name}
+          {item.name.length > 13 ? item.name.slice(0, 13) + "..." : item.name}
         </Text>
         <Text style={styles.movieInfo}>
           {item.year} | {item.rated} | {item.runtime}
@@ -68,39 +90,78 @@ const Movies = () => {
       </View>
     </TouchableWithoutFeedback>
   );
+  // console.table(movies);
 
   return (
     <View style={styles.container}>
-      <SafeAreaView style={styles.safeAreaView}>
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>
-            <Fontisto name="film" size={21} color="red" /> Series & TV Shows
-          </Text>
-          <TouchableOpacity onPress={() => router.push("/search")}>
-            <FontAwesome5 color="white" name="search" size={20} />
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
+      <Header title="Series & TV Shows" />
+      <StatusBar />
       {loading && page === 1 ? (
         <LoadingScreen />
       ) : (
-        <FlatList
-          data={movies}
-          renderItem={renderMovie}
-          keyExtractor={(item) => item._id}
-          onEndReached={loadMoreMovies}
-          onEndReachedThreshold={0.5}
-          numColumns={3}
-          ListFooterComponent={
-            loading ? <ActivityIndicator size="large" color="#fff" /> : null
-          }
-          contentContainerStyle={styles.listContentContainer}
-        />
+        <>
+          <ScrollView
+            horizontal
+            style={{ marginVertical: 20, paddingHorizontal: 10 }}
+          >
+            {genre &&
+              genre.map((genre) => (
+                <TouchableOpacity
+                  onPress={() =>
+                    router.push({
+                      pathname: "/genre/[genre]",
+                      params: { genre: genre },
+                    })
+                  }
+                  key={genre}
+                  style={{
+                    backgroundColor: "#302f2f",
+                    paddingBottom: 10,
+                    paddingHorizontal: 9,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRadius: 5,
+                    marginLeft: 10,
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: "white",
+                      fontSize: 16,
+                      fontWeight: "bold",
+                      textAlign: "center",
+                      lineHeight: 27,
+                    }}
+                  >
+                    {genre}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+          </ScrollView>
+          <FlatList
+            data={movies}
+            renderItem={renderMovie}
+            keyExtractor={(item) => item._id}
+            onEndReached={loadMoreMovies}
+            onEndReachedThreshold={0.5}
+            numColumns={3}
+            ListFooterComponent={
+              loading ? <ActivityIndicator size="large" color="#fff" /> : null
+            }
+            contentContainerStyle={styles.listContentContainer}
+          />
+        </>
       )}
       {error && (
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>{error}</Text>
-          <TouchableOpacity onPress={() => loadMovies(1)}>
+          <TouchableOpacity
+            onPress={() => {
+              getGenres();
+              loadMovies(1);
+            }}
+          >
             <FontAwesome name="refresh" size={44} color="white" />
           </TouchableOpacity>
         </View>
@@ -145,13 +206,13 @@ const styles = StyleSheet.create({
     color: "white",
     marginLeft: 5,
     marginTop: 5,
-    fontSize: 14,
+    fontSize: 12,
   },
   movieInfo: {
     color: "white",
     marginLeft: 5,
     marginTop: 5,
-    fontSize: 12,
+    fontSize: 9,
   },
   listContentContainer: {
     paddingBottom: 10,

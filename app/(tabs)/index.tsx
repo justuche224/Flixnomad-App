@@ -19,6 +19,7 @@ import { fetchTrendingMovies, newMovies, trendingMovies } from "@/store";
 import { router } from "expo-router";
 import LoadingScreen from "@/components/LoadingScreen";
 import { ApiMovie } from "@/types"; // Import your type definition here
+import Header from "@/components/Header";
 
 export default function HomeScreen() {
   const { width, height } = Dimensions.get("window");
@@ -51,27 +52,8 @@ export default function HomeScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: "black" }}>
-      <SafeAreaView
-        style={{ marginBottom: ios ? -8 : null, marginTop: ios ? null : 16 }}
-      >
-        <StatusBar />
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginHorizontal: 16,
-          }}
-        >
-          <Text className="text-2xl font-bold text-white">
-            <Fontisto name="film" size={21} color="red" />
-            Flixnomad
-          </Text>
-          <TouchableOpacity onPress={() => router.push("/search")}>
-            <FontAwesome5 color="white" name="search" size={20} />
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
+      <Header title="Flixnomad" />
+      <StatusBar />
       {loading ? (
         <LoadingScreen />
       ) : (

@@ -19,7 +19,7 @@ const apiCall = async <T>(
 
   try {
     const response = await axios.request<T>(options);
-    console.log(response.data);
+    // console.log(response.data);
 
     return { data: response.data };
   } catch (error) {
@@ -57,6 +57,14 @@ export const fetchSeriesWithPagination = (page: number, perPage: number) => {
 
 export const fetchGenres = () => {
   return apiCall<{ genres: string[] }>(`${apiBaseUrl}/movies/genres`);
+};
+
+export const fetchGenre = (genre: string) => {
+  const link = `${apiBaseUrl}/movies/genres/genre?genre=${genre}`;
+  // console.log(link);
+  return apiCall<MoviesApiResponse>(
+    `${apiBaseUrl}/movies/genres/genre?genre=${genre}`
+  );
 };
 
 export const trendingMovies: Item[] = [

@@ -64,7 +64,11 @@ export default function MoviePage() {
   };
 
   if (loading) {
-    return <LoadingScreen />;
+    return (
+      <View style={styles.container}>
+        <LoadingScreen />
+      </View>
+    );
   }
 
   if (error) {
@@ -263,6 +267,11 @@ export default function MoviePage() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: "black",
+  },
   downloadButton: {
     display: "flex",
     flexDirection: "row",
