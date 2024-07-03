@@ -4,27 +4,36 @@
     "slug": "flixnomad",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "icon": "./assets/icons/android/play_store_512.png",
+    "scheme": "flixnomad",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/icons/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#000000"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "icon": "./assets/icons/ios/AppIcon~ios-marketing.png",
+      "bundleIdentifier": "com.flixnomad.movies"
+    },
+    "androidNavigationBar": {
+      "backgroundColor": "#000000"
     },
     "android": {
+      "icon": "./assets/icons/android/res/mipmap-xxxhdpi/flixnomad.png",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/icons/android/res/mipmap-xxxhdpi/flixnomad_foreground.png",
+        "monochromeImage": "./assets/icons/android/res/mipmap-xxxhdpi/flixnomad_monochrome.png",
+        "backgroundImage": "./assets/icons/android/res/mipmap-xxxhdpi/flixnomad_background.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.flixnomad.movies"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/icons/web/favicon.ico"
     },
     "plugins": [
       "expo-router"

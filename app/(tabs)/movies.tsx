@@ -34,8 +34,8 @@ const Movies = () => {
   const perPage = 15;
 
   useEffect(() => {
-    getGenres();
     loadMovies(1);
+    getGenres();
   }, []);
 
   const loadMovies = async (pageNum: number) => {
@@ -158,8 +158,8 @@ const Movies = () => {
           <Text style={styles.errorText}>{error}</Text>
           <TouchableOpacity
             onPress={() => {
-              getGenres();
               loadMovies(1);
+              getGenres();
             }}
           >
             <FontAwesome name="refresh" size={44} color="white" />
