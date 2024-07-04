@@ -20,5 +20,5 @@ expo-env.d.ts
 # @end expo-cli
 
 # prebuid
-android/
-ios/
+/android/
+/ios/
