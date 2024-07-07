@@ -15,7 +15,9 @@
     "ios": {
       "supportsTablet": true,
       "icon": "./assets/icons/ios/AppIcon~ios-marketing.png",
-      "bundleIdentifier": "com.flixnomad.movies"
+      "bundleIdentifier": "com.flixnomad.movies",
+      "permissions": [],
+      "buildNumber": "1.0.0"
     },
     "androidNavigationBar": {
       "backgroundColor": "#000000"
@@ -28,16 +30,16 @@
         "backgroundImage": "./assets/icons/android/res/mipmap-xxxhdpi/flixnomad_background.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.flixnomad.movies"
+      "package": "com.flixnomad.movies",
+      "permissions": [],
+      "versionCode": 1
     },
     "web": {
       "bundler": "metro",
       "output": "static",
       "favicon": "./assets/icons/web/favicon.ico"
     },
-    "plugins": [
-      "expo-router"
-    ],
+    "plugins": ["expo-router"],
     "experiments": {
       "typedRoutes": true
     },

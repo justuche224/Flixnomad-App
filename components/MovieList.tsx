@@ -30,7 +30,7 @@ export default function MovieList({ title, data }: MovieListProps) {
     <View className="mb-8 space-y-4 bg-black">
       <View className="mx-4 flex-row justify-between items-center">
         <Text className="text-2xl text-white">{title}</Text>
-        <TouchableOpacity>
+        <TouchableOpacity style={{ display: "none" }}>
           <Text style={styles.seeMore}>See More</Text>
         </TouchableOpacity>
       </View>

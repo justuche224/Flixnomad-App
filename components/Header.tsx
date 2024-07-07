@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Platform,
   StyleSheet,
+  Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Fontisto, FontAwesome5 } from "@expo/vector-icons";
@@ -26,9 +27,13 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
       ]}
     >
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>
-          <Fontisto name="film" size={21} color="red" /> {title}
-        </Text>
+        <View className="flex-row justify-center items-center">
+          <Image
+            source={require("../assets/icons/android/play_store_512.png")}
+            style={{ width: 31, height: 31, marginRight: 10, borderRadius: 4 }}
+          />
+          <Text style={styles.headerTitle}>{title}</Text>
+        </View>
         <TouchableOpacity onPress={() => router.push("/search")}>
           <FontAwesome5 color="white" name="search" size={20} />
         </TouchableOpacity>

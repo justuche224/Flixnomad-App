@@ -11,10 +11,14 @@ import {
   Image,
   Dimensions,
   ScrollView,
+  RefreshControl,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { ApiMovie } from "@/types";
-import { fetchGenres, fetchSeriesWithPagination } from "@/store";
+import {
+  fetchGenres,
+  fetchMoviesWithPagination,
+  fetchSeriesWithPagination,
+} from "@/store";
 import { FontAwesome } from "@expo/vector-icons";
 import { router } from "expo-router";
 import LoadingScreen from "@/components/LoadingScreen";
@@ -28,14 +32,15 @@ const Movies = () => {
   const [movies, setMovies] = useState<ApiMovie[]>([]);
   const [genre, setGenre] = useState<string[] | undefined>();
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | undefined>();
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const perPage = 15;
 
   useEffect(() => {
-    getGenres();
     loadMovies(1);
+    getGenres();
   }, []);
 
   const loadMovies = async (pageNum: number) => {
@@ -70,6 +75,14 @@ const Movies = () => {
     }
   };
 
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    setMovies([]); // Clear the current list of movies
+    setPage(1); // Reset page to 1
+    await loadMovies(1);
+    setRefreshing(false);
+  };
+
   const renderMovie = ({ item }: { item: ApiMovie }) => (
     <TouchableWithoutFeedback
       onPress={() => {
@@ -90,7 +103,6 @@ const Movies = () => {
       </View>
     </TouchableWithoutFeedback>
   );
-  // console.table(movies);
 
   return (
     <View style={styles.container}>
@@ -102,7 +114,7 @@ const Movies = () => {
         <>
           <ScrollView
             horizontal
-            style={{ marginVertical: 20, paddingHorizontal: 10 }}
+            style={{ marginVertical: 20, paddingHorizontal: 10, maxHeight: 50 }}
           >
             {genre &&
               genre.map((genre) => (
@@ -131,7 +143,7 @@ const Movies = () => {
                       fontSize: 16,
                       fontWeight: "bold",
                       textAlign: "center",
-                      lineHeight: 27,
+                      lineHeight: 28,
                     }}
                   >
                     {genre}
@@ -139,18 +151,36 @@ const Movies = () => {
                 </TouchableOpacity>
               ))}
           </ScrollView>
-          <FlatList
-            data={movies}
-            renderItem={renderMovie}
-            keyExtractor={(item) => item._id}
-            onEndReached={loadMoreMovies}
-            onEndReachedThreshold={0.5}
-            numColumns={3}
-            ListFooterComponent={
-              loading ? <ActivityIndicator size="large" color="#fff" /> : null
-            }
-            contentContainerStyle={styles.listContentContainer}
-          />
+          {movies.length > 0 ? (
+            <FlatList
+              data={movies}
+              renderItem={renderMovie}
+              keyExtractor={(item) => item._id}
+              onEndReached={loadMoreMovies}
+              onEndReachedThreshold={0.5}
+              numColumns={3}
+              ListFooterComponent={
+                loading ? <ActivityIndicator size="large" color="#fff" /> : null
+              }
+              contentContainerStyle={styles.listContentContainer}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={handleRefresh}
+                />
+              }
+            />
+          ) : (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text className="text-white">No movies found.</Text>
+            </View>
+          )}
         </>
       )}
       {error && (
@@ -158,8 +188,8 @@ const Movies = () => {
           <Text style={styles.errorText}>{error}</Text>
           <TouchableOpacity
             onPress={() => {
-              getGenres();
               loadMovies(1);
+              getGenres();
             }}
           >
             <FontAwesome name="refresh" size={44} color="white" />

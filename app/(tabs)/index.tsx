@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   StyleSheet,
   Image,
+  RefreshControl,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
@@ -25,10 +26,11 @@ export default function HomeScreen() {
   const [latest, setLatest] = useState<ApiMovie[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | undefined>();
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    getTrendingMovies();
     getMovies(10);
+    getTrendingMovies();
   }, []);
 
   const getTrendingMovies = async () => {
@@ -55,9 +57,11 @@ export default function HomeScreen() {
     setLoading(false);
   };
 
-  const handleRefresh = () => {
-    getTrendingMovies();
-    getMovies(10);
+  const handleRefresh = async () => {
+    // setRefreshing(true);
+    await getMovies(10);
+    await getTrendingMovies();
+    // setRefreshing(false);
   };
 
   const renderMovie = ({ item }: { item: ApiMovie }) => (
@@ -103,6 +107,9 @@ export default function HomeScreen() {
           numColumns={3}
           contentContainerStyle={styles.listContentContainer}
           ListFooterComponent={<View style={{ height: 50 }} />}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+          }
         />
       )}
       {error && (

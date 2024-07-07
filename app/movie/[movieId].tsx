@@ -7,7 +7,6 @@ import {
   Platform,
   Image,
   StyleSheet,
-  Linking,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
@@ -163,12 +162,13 @@ export default function MoviePage() {
             onPress={() => navigation.goBack()}
             style={{
               borderRadius: 12,
-              padding: 1,
+              padding: 2,
+              backgroundColor: "rgba(0, 0, 0, 0.6)",
             }}
           >
-            <AntDesign color={"white"} name="arrowleft" size={28} />
+            <AntDesign color={"white"} name="arrowleft" size={30} />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity style={{ display: "none" }}>
             <AntDesign color={"white"} name="heart" size={24} />
           </TouchableOpacity>
         </SafeAreaView>
@@ -229,7 +229,7 @@ export default function MoviePage() {
             <YoutubePlayer
               height={300}
               width={width - 50}
-              videoId={"LFSpRNtxd8I"}
+              videoId={movie.trailer}
             />
           </View>
         </Collapsible>
@@ -270,7 +270,7 @@ export default function MoviePage() {
         </View>
       </View>
       <View className="bg-black">
-        <MovieList title="Related" data={relatedMovies} />
+        <MovieList title="Also watch" data={relatedMovies} />
       </View>
     </ScrollView>
   );
