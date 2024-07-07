@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     marginTop: null,
   },
   androidSafeArea: {
-    marginTop: 16,
+    marginTop: 10,
   },
   header: {
     flexDirection: "row",
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     color: "white",
-    lineHeight: 32,
+    lineHeight: 42,
   },
 });
 
