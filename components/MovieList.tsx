@@ -9,16 +9,16 @@ import {
   View,
 } from "react-native";
 import { router } from "expo-router";
-import { Item } from "@/types";
+import { ApiMovie } from "@/types";
 
 const { width, height } = Dimensions.get("window");
 
 interface MovieListProps {
-  data: Item[];
+  data: ApiMovie[];
   title: string;
 }
 
-const handleClick: (item: Item) => void = (item: Item) => {
+const handleClick: (item: ApiMovie) => void = (item: ApiMovie) => {
   router.push({
     pathname: "/movie/[id]",
     params: { id: item._id, movie: JSON.stringify(item) },

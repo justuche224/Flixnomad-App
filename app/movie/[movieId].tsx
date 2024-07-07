@@ -19,7 +19,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import YoutubePlayer from "react-native-youtube-iframe";
 import LoadingScreen from "@/components/LoadingScreen";
 import MovieList from "@/components/MovieList";
-import { fetSingleMovie, newMovies } from "@/store";
+import { fetchGenre, fetSingleMovie } from "@/store";
 import { Collapsible } from "@/components/Collapsible";
 import * as WebBrowser from "expo-web-browser";
 
@@ -27,17 +27,28 @@ const { width, height } = Dimensions.get("window");
 
 export default function MoviePage() {
   const [loading, setLoading] = useState(false);
-  const [latest, setLatest] = useState(newMovies);
+  const [relatedMovies, setRelatedMovies] = useState<ApiMovie[]>([]);
   const [movie, setMovie] = useState<ApiMovie | undefined>();
   const [error, setError] = useState<string | undefined>();
   const { movieId } = useLocalSearchParams();
   const navigation = useNavigation();
+
+  const getRelatedMovies = async (genre: string) => {
+    const response = await fetchGenre(genre as string);
+    if (response.data && response.data.movies) {
+      setRelatedMovies(response.data.movies);
+    } else {
+      console.error(response.error);
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
     const getMovie = async (movieId: string) => {
       setLoading(true);
       const response = await fetSingleMovie(movieId as string);
       if (response.data) {
+        await getRelatedMovies(response.data.genre[0]);
         setMovie(response.data);
       } else {
         setError(response.error);
@@ -132,7 +143,7 @@ export default function MoviePage() {
   return (
     <ScrollView
       contentContainerStyle={{ paddingBottom: 20 }}
-      style={{ flex: 1 }}
+      style={{ flex: 1, height: height, backgroundColor: "black" }}
     >
       {/* back button and movie poster */}
       <View style={{ flex: 1, backgroundColor: "black" }}>
@@ -259,8 +270,7 @@ export default function MoviePage() {
         </View>
       </View>
       <View className="bg-black">
-        {/* Dummy */}
-        <MovieList title="Related" data={latest} />
+        <MovieList title="Related" data={relatedMovies} />
       </View>
     </ScrollView>
   );
